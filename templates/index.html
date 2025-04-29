@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Conflict Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #ff4444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .status-bar {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2em;
+        }
+
+        .conflict-status {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .conflict-status.active {
+            color: #ff0000;
+            animation: pulse 1s infinite;
+        }
+
+        .live-feed {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Live Conflict Detection System</h1>
+        
+        <div class="video-container">
+            <img src="{% url 'video_feed' %}" class="live-feed">
+        </div>
+
+        <!-- <div class="status-bar">
+            <div class="people-count">People Detected: <span id="peopleCount">0</span></div>
+            <div class="conflict-status" id="conflictStatus">No Conflict Detected</div>
+        </div> -->
+    </div>
+
+    <footer>
+        AI-Powered Conflict Detection System | Real-time Monitoring
+    </footer>
+
+    <script>
+        
+        setInterval(() => {
+            const imgText = document.querySelector('.live-feed').alt || '';
+            const peopleMatch = imgText.match(/People: (\d+)/);
+            const conflictMatch = imgText.match(/Conflict: (Yes|No)/);
+
+            if (peopleMatch) {
+                document.getElementById('peopleCount').textContent = peopleMatch[1];
+            }
+            
+            if (conflictMatch) {
+                const statusElement = document.getElementById('conflictStatus');
+                statusElement.textContent = conflictMatch[1] === 'Yes' 
+                    ? 'CONFLICT DETECTED!' 
+                    : 'No Conflict Detected';
+                statusElement.classList.toggle('active', conflictMatch[1] === 'Yes');
+            }
+        }, 200);
+    </script>
+</body>
+</html>
